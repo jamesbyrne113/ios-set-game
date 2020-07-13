@@ -17,15 +17,13 @@ class SetGameViewModel: ObservableObject {
     
     var cards: [SetGameModel.Card] { setGameModel.cards }
     
-    var displayedCards: [SetGameModel.Card] {
-        return Array(setGameModel.cards.filter{ card in !(card.isMatched ?? false) || card.isSelected }[0..<setGameModel.numOfDisplayedCards])
-    }
+    var displayedCards: [SetGameModel.Card] { setGameModel.displayedCards}
     
     var unseenCardNum: Int { setGameModel.numOfUnseenCards }
     
-    var numOfMatches: Int { setGameModel.matchedCardNum / 3 }
+    var numOfMatchedSets: Int { setGameModel.numOfMatchedSets / 3 }
     
-    var totalNumOfSets: Int { setGameModel.cards.count / 3 }
+    var totalNumOfSets: Int { setGameModel.totalNumOfSets }
     
     func select(card: SetGameModel.Card) {
         setGameModel.select(card: card)

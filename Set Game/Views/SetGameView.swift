@@ -13,7 +13,7 @@ struct SetGameView: View {
     
     var body: some View {
         VStack{
-            Text("\(setGameViewModel.numOfMatches) / \(setGameViewModel.totalNumOfSets) matches")
+            Text("\(setGameViewModel.numOfMatchedSets) / \(setGameViewModel.totalNumOfSets) matches")
             .font(Font.title)
             
             Grid(setGameViewModel.displayedCards) { card in
@@ -27,7 +27,12 @@ struct SetGameView: View {
             HStack {
                 Spacer()
                 
-                Button(action: { self.setGameViewModel.dealMoreCards() }, label: { Text("Deal More Cards") })
+                Button(action: {
+                        withAnimation(.linear(duration: 0.2)) {
+                            self.setGameViewModel.dealMoreCards()
+                        }
+                    }, label: { Text("Deal More Cards") }
+                )
                     .disabled(setGameViewModel.unseenCardNum <= 0)
                 
                 Spacer()

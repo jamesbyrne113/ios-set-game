@@ -12,10 +12,18 @@ struct SetGameModel {
     private(set) var cards: [Card]
     private(set) var maxNumOfCardsDisplayed = 12
     
-    var matchedCardNum: Int { cards.filter({ card in (card.isMatched ?? false) }).count }
-    var unmatchedCardNum: Int { cards.filter({ card in !(card.isMatched ?? false) }).count }
-    var numOfDisplayedCards: Int { min(unmatchedCardNum, maxNumOfCardsDisplayed) }
+    var totalNumOfSets: Int { cards.count / 3 }
+    
+    private var matchedCardNum: Int { cards.filter({ card in (card.isMatched ?? false) }).count }
+    private var unmatchedCardNum: Int { cards.filter({ card in !(card.isMatched ?? false) }).count }
+    var numOfMatchedSets: Int { matchedCardNum / 3 }
+    
+    private var numOfDisplayedCards: Int { min(unmatchedCardNum, maxNumOfCardsDisplayed) }
     var numOfUnseenCards: Int { unmatchedCardNum - numOfDisplayedCards }
+    
+    var displayedCards: [SetGameModel.Card] {
+        return Array(cards.filter{ card in !(card.isMatched ?? false) || card.isSelected }[0..<numOfDisplayedCards])
+    }
     
     init() {
         cards = SetGameModel.createCards()
