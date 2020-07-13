@@ -18,7 +18,9 @@ struct SetGameView: View {
             
             Grid(setGameViewModel.displayedCards) { card in
                 CardView(card: card).onTapGesture {
-                    self.setGameViewModel.select(card: card)
+                    withAnimation(.linear(duration: 0.2)) {
+                        self.setGameViewModel.select(card: card)
+                    }
                 }
             }
             
@@ -30,7 +32,11 @@ struct SetGameView: View {
                 
                 Spacer()
                 
-                Button(action: { self.setGameViewModel.resetGame() }, label: { Text("New Game")})
+                Button(action: {
+                    withAnimation(.easeInOut(duration: 0.75)) {
+                        self.setGameViewModel.resetGame()
+                    }
+                }, label: { Text("New Game")})
                 
                 Spacer()
             }

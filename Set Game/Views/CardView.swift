@@ -11,6 +11,36 @@ import SwiftUI
 struct CardView: View {
     let card: SetGameModel.Card
     
+    var body: some View {
+        GeometryReader { geometry in
+            self.cardContents(for: geometry.size)
+        }
+            .padding(5)
+//        .animation(card.isMatched ?? false && !card.isSelected ? .easeInOut(duration: 2) : .linear(duration: 0.1))
+    }
+    
+    private func cardContents(for size: CGSize) -> some View {
+        let width = size.width * shapeWidthRatio
+        let height = size.height * shapeHeightRatio
+
+        let shape = createShape()
+
+        return ZStack {
+            RoundedRectangle(cornerRadius: 5)
+                .fill(cardFillColor)
+                .opacity(0.5)
+            RoundedRectangle(cornerRadius: 5)
+                .stroke(cardStrokeColor)
+
+            VStack(spacing: self.shapeSpacing(for: size.height)) {
+                ForEach(1...self.card.number.rawValue, id: \.self) { index in
+                    shape
+                    .frame(width: width, height: height)
+                }
+            }
+        }
+    }
+    
     private var cardStrokeColor: Color {
         if !card.isSelected && card.isMatched == nil {
             return Color.black
@@ -41,47 +71,7 @@ struct CardView: View {
         } else {
             return Color.yellow
         }
-//        if card.isMatched ?? false {
-//            return Color.green
-//        } else if !(card.isMatched ?? true) {
-//            return Color.gray
-//        } else if card.isSelected {
-//            return Color.yellow
-//        } else {
-//            return Color.clear
-//        }
     }
-    
-    var body: some View {
-        GeometryReader { geometry in
-            self.cardContents(for: geometry.size)
-        }
-            .padding(5)
-    }
-    
-    private func cardContents(for size: CGSize) -> some View {
-        let width = size.width * shapeWidthRatio
-        let height = size.height * shapeHeightRatio
-
-        let shape = createShape()
-
-        return ZStack {
-            RoundedRectangle(cornerRadius: 5)
-                .fill(cardFillColor)
-                .opacity(0.5)
-            RoundedRectangle(cornerRadius: 5)
-                .stroke(cardStrokeColor)
-
-            VStack(spacing: self.shapeSpacing(for: size.height)) {
-                ForEach(1...self.card.number.rawValue, id: \.self) { index in
-                    shape
-                    .frame(width: width, height: height)
-                }
-            }
-        }
-    }
-    
-    
     
     private func createShape() -> some View {
         var shape: AnyShape
