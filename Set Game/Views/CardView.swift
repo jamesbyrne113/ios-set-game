@@ -16,7 +16,6 @@ struct CardView: View {
             self.cardContents(for: geometry.size)
         }
             .padding(5)
-//        .animation(card.isMatched ?? false && !card.isSelected ? .easeInOut(duration: 2) : .linear(duration: 0.1))
     }
     
     private func cardContents(for size: CGSize) -> some View {

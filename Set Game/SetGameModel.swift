@@ -21,7 +21,7 @@ struct SetGameModel {
     private var numOfDisplayedCards: Int { min(unmatchedCardNum, maxNumOfCardsDisplayed) }
     var numOfUnseenCards: Int { unmatchedCardNum - numOfDisplayedCards }
     
-    var displayedCards: [SetGameModel.Card] {
+    var displayedCards: [Card] {
         return Array(cards.filter{ card in !(card.isMatched ?? false) || card.isSelected }[0..<numOfDisplayedCards])
     }
     
@@ -49,7 +49,7 @@ struct SetGameModel {
         return true
     }
     
-    mutating func select(card: SetGameModel.Card) {
+    mutating func select(card: Card) {
         let previousSelectedIndices = IndexSet(cards.indices.filter({ cardIndex in cards[cardIndex].isSelected }))
         
         guard let currentSelectedIndex = cards.firstIndex(matching: card) else { return }
