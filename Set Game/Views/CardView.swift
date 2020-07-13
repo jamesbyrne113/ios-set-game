@@ -9,7 +9,7 @@
 import SwiftUI
 
 struct CardView: View {
-    let card: SetGameModel.Card
+    let card: SetGame.Card
     
     var body: some View {
         GeometryReader { geometry in

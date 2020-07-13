@@ -8,55 +8,73 @@
 
 import Foundation
 
-struct SetGameModel {
+
+
+struct SetGameModel<Number: Hashable & CaseIterable, Shape: Hashable & CaseIterable, Shading: Hashable & CaseIterable, Color: Hashable & CaseIterable> {
     private(set) var cards: [Card]
     private(set) var maxNumOfCardsDisplayed = 12
-    
+
     var totalNumOfSets: Int { cards.count / 3 }
-    
+
     private var matchedCardNum: Int { cards.filter({ card in (card.isMatched ?? false) }).count }
     private var unmatchedCardNum: Int { cards.filter({ card in !(card.isMatched ?? false) }).count }
     var numOfMatchedSets: Int { matchedCardNum / 3 }
-    
+
     private var numOfDisplayedCards: Int { min(unmatchedCardNum, maxNumOfCardsDisplayed) }
     var numOfUnseenCards: Int { unmatchedCardNum - numOfDisplayedCards }
-    
+
     var displayedCards: [Card] {
         return Array(cards.filter{ card in !(card.isMatched ?? false) || card.isSelected }[0..<numOfDisplayedCards])
     }
-    
+
     init() {
         cards = SetGameModel.createCards()
     }
+
+    static func createCards() -> [Card] {
+        var cards = [Card]()
+        
+        for number in Number.allCases {
+            for shape in Shape.allCases {
+                for shading in Shading.allCases {
+                    for color in Color.allCases {
+                        cards.append(Card(id: cards.count, number: number, shape: shape, shading: shading, color: color))
+                    }
+                }
+            }
+        }
+//        cards.shuffle()
+        return cards
+    }
     
     private func isMatchingSet(cardSet: [Card]) -> Bool {
-        var numbers = Set<Card.Number>()
-        var shapes = Set<Card.Shape>()
-        var shadings = Set<Card.Shading>()
-        var colors = Set<Card.Color>()
-        
+        var numbers = Set<Number>()
+        var shapes = Set<Shape>()
+        var shadings = Set<Shading>()
+        var colors = Set<Color>()
+
         for card in cardSet {
             numbers.insert(card.number)
             shapes.insert(card.shape)
             shadings.insert(card.shading)
             colors.insert(card.color)
         }
-        
+
         if numbers.count == 2 || shapes.count == 2 || shadings.count == 2 || colors.count == 2 {
             return false
         }
-        
+
         return true
     }
-    
+
     mutating func select(card: Card) {
         let previousSelectedIndices = IndexSet(cards.indices.filter({ cardIndex in cards[cardIndex].isSelected }))
-        
+
         guard let currentSelectedIndex = cards.firstIndex(matching: card) else { return }
-        
+
         var allSelectedIndices = previousSelectedIndices
         allSelectedIndices.insert(currentSelectedIndex)
-        
+
         if allSelectedIndices.count == 3 {
             if previousSelectedIndices.count == 3 {
                 previousSelectedIndices.forEach({ cardIndex in
@@ -91,30 +109,12 @@ struct SetGameModel {
             cards[currentSelectedIndex].isSelected = !cards[currentSelectedIndex].isSelected
         }
     }
-    
+
     mutating func dealMoreCards() {
         maxNumOfCardsDisplayed += min(numOfUnseenCards, 3)
     }
     
-    static func createCards() -> Array<Card> {
-        var cards = [Card]()
-        
-        for number in Card.Number.allCases {
-            for shape in Card.Shape.allCases {
-                for shading in Card.Shading.allCases {
-                    for color in Card.Color.allCases {
-                        cards.append(Card(id: cards.count, number: number, shape: shape, shading: shading, color: color))
-                    }
-                }
-            }
-        }
-        
-        cards.shuffle()
-        
-        return cards
-    }
-    
-    struct Card: Identifiable, Equatable {
+    struct Card: Identifiable {
         let id: Int
         let number: Number
         let shape: Shape
@@ -123,21 +123,5 @@ struct SetGameModel {
         
         var isMatched: Bool?
         var isSelected = false
-        
-        enum Number: Int, CaseIterable {
-            case one = 1, two, three
-        }
-        
-        enum Shape: String, CaseIterable {
-            case diamond, rectangle, oval
-        }
-        
-        enum Shading: String, CaseIterable {
-            case solid, transparent, open
-        }
-        
-        enum Color: String, CaseIterable {
-            case red, purple, blue
-        }
     }
 }
