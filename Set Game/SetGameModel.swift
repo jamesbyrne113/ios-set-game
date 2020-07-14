@@ -43,7 +43,7 @@ struct SetGameModel<Number: Hashable & CaseIterable, Shape: Hashable & CaseItera
                 }
             }
         }
-//        cards.shuffle()
+        cards.shuffle()
         return cards
     }
     

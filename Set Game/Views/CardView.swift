@@ -127,7 +127,6 @@ struct CardView: View {
 struct CardSetGameView_Previews: PreviewProvider {
     static var previews: some View {
         let setGameViewModel = SetGameViewModel()
-        setGameViewModel.select(card: setGameViewModel.cards[0])
         return SetGameView(setGameViewModel: setGameViewModel)
     }
 }

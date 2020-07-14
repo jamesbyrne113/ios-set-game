@@ -11,32 +11,37 @@ import SwiftUI
 typealias SetGame = SetGameModel<SetGameViewModel.Number, SetGameViewModel.Shape, SetGameViewModel.Shading, SetGameViewModel.Color>
 
 class SetGameViewModel: ObservableObject {
-    @Published private var setGameModel = SetGameViewModel.createSetGame()
-    
-    static func createSetGame() -> SetGame {
-        return SetGame()
-    }
-    
-    var cards: [SetGame.Card] { setGameModel.cards }
-    
-    var displayedCards: [SetGame.Card] { setGameModel.displayedCards}
-    
-    var unseenCardNum: Int { setGameModel.numOfUnseenCards }
-    
-    var numOfMatchedSets: Int { setGameModel.numOfMatchedSets / 3 }
-    
-    var totalNumOfSets: Int { setGameModel.totalNumOfSets }
-    
+    @Published private var setGameModel: SetGame?
+
+//    static func createSetGame() -> SetGame {
+//        return SetGame()
+//    }
+
+    var cards: [SetGame.Card] { setGameModel?.cards ?? [SetGame.Card]() }
+
+    var displayedCards: [SetGame.Card] { setGameModel?.displayedCards ?? [SetGame.Card]()}
+
+    var unseenCardNum: Int { setGameModel?.numOfUnseenCards ?? 0}
+
+    var numOfMatchedSets: Int { (setGameModel?.numOfMatchedSets ?? 0) / 3 }
+
+    var totalNumOfSets: Int { setGameModel?.totalNumOfSets ?? 0}
+
     func select(card: SetGame.Card) {
-        setGameModel.select(card: card)
+        setGameModel?.select(card: card)
     }
-    
+
     func dealMoreCards() {
-        setGameModel.dealMoreCards()
+        setGameModel?.dealMoreCards()
     }
     
-    func resetGame() {
-        setGameModel = SetGameViewModel.createSetGame()
+    func createSetGame() {
+        setGameModel = SetGame()
+    }
+    
+    func resetSetGame() {
+        setGameModel = nil
+        setGameModel = SetGame()
     }
     
     enum Number: Int, CaseIterable {

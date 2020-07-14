@@ -12,17 +12,29 @@ struct SetGameView: View {
     @ObservedObject var setGameViewModel: SetGameViewModel
     
     var body: some View {
-        VStack{
+        GeometryReader { geometry in
+            self.body(for: geometry.size)
+        }
+    }
+    
+    private func body(for size: CGSize) -> some View {
+        VStack {
             Text("\(setGameViewModel.numOfMatchedSets) / \(setGameViewModel.totalNumOfSets) matches")
             .font(Font.title)
             
-            Grid(setGameViewModel.displayedCards) { card in
+            Grid(self.setGameViewModel.displayedCards) { card in
                 CardView(card: card).onTapGesture {
                     withAnimation(.linear(duration: 0.2)) {
                         self.setGameViewModel.select(card: card)
                     }
                 }
             }
+                
+            .onAppear(perform: {
+                withAnimation(.easeInOut(duration: 1.2)) {
+                    self.setGameViewModel.createSetGame()
+                }
+            })
             
             HStack {
                 Spacer()
@@ -39,7 +51,7 @@ struct SetGameView: View {
                 
                 Button(action: {
                     withAnimation(.easeInOut(duration: 0.75)) {
-                        self.setGameViewModel.resetGame()
+                        self.setGameViewModel.resetSetGame()
                     }
                 }, label: { Text("New Game")})
                 
@@ -49,12 +61,23 @@ struct SetGameView: View {
             Spacer()
         }
     }
+    
+    private func generateOffsetPoint(for size: CGSize) -> CGSize {
+        let radius = 1.5 * sqrt(pow(size.width, 2) + pow(size.height, 2))
+        let centerX = size.width/2
+        let centerY = size.height/2
+        
+        let randomAngle = CGFloat(Double.random(in: 0..<360))
+        let x = centerX + radius * cos(randomAngle * CGFloat(Double.pi) / 180)
+        let y = centerY + radius * sin(randomAngle * CGFloat(Double.pi) / 180)
+        
+        return CGSize(width: x, height: y)
+    }
 }
 
 struct SetGameView_Previews: PreviewProvider {
     static var previews: some View {
         let setGameViewModel = SetGameViewModel()
-        setGameViewModel.select(card: setGameViewModel.cards[0])
         return SetGameView(setGameViewModel: setGameViewModel)
     }
 }
