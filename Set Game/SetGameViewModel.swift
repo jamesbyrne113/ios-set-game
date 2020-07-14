@@ -26,6 +26,8 @@ class SetGameViewModel: ObservableObject {
     var numOfMatchedSets: Int { (setGameModel?.numOfMatchedSets ?? 0) }
 
     var totalNumOfSets: Int { setGameModel?.totalNumOfSets ?? 0}
+    
+    var score: Int { setGameModel?.score ?? 0 }
 
     func select(card: SetGame.Card) {
         setGameModel?.select(card: card)

@@ -13,6 +13,7 @@ import Foundation
 struct SetGameModel<Number: Hashable & CaseIterable, Shape: Hashable & CaseIterable, Shading: Hashable & CaseIterable, Color: Hashable & CaseIterable> {
     private(set) var cards: [Card]
     private(set) var maxNumOfCardsDisplayed = 12
+    private(set) var score = 0
 
     var totalNumOfSets: Int { cards.count / 3 }
 
@@ -86,11 +87,13 @@ struct SetGameModel<Number: Hashable & CaseIterable, Shape: Hashable & CaseItera
             } else if isMatchingSet(cardSet: allSelectedIndices.map { cards[$0] }) {
                 allSelectedIndices.forEach({ cardIndex in cards[cardIndex].isMatched = true })
                 cards[currentSelectedIndex].isSelected = true
+                score += 3
             } else {
                 allSelectedIndices.forEach({ cardIndex in
                     cards[cardIndex].isMatched = false
                     cards[cardIndex].isSelected = true
                 })
+                score -= 1
             }
         } else if previousSelectedIndices.count == 3 {
             if isMatchingSet(cardSet: previousSelectedIndices.map { cards[$0] }) {
@@ -112,6 +115,7 @@ struct SetGameModel<Number: Hashable & CaseIterable, Shape: Hashable & CaseItera
 
     mutating func dealMoreCards() {
         maxNumOfCardsDisplayed += min(numOfUnseenCards, 3)
+        score -= 9
     }
     
     struct Card: Identifiable {

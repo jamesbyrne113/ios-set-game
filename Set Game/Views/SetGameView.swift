@@ -19,8 +19,18 @@ struct SetGameView: View {
     
     private func body(for size: CGSize) -> some View {
         VStack {
-            Text("\(setGameViewModel.numOfMatchedSets) / \(setGameViewModel.totalNumOfSets) matches")
-            .font(Font.title)
+            HStack {
+                Spacer()
+                
+                Text("Matches: \(setGameViewModel.numOfMatchedSets) / \(setGameViewModel.totalNumOfSets)")
+                
+                Spacer()
+                
+                Text("Score: \(setGameViewModel.score)")
+                
+                Spacer()
+            }
+                .font(Font.title)
             
             Grid(self.setGameViewModel.displayedCards) { card in
                 CardView(card: card).onTapGesture {
