@@ -23,7 +23,7 @@ class SetGameViewModel: ObservableObject {
 
     var unseenCardNum: Int { setGameModel?.numOfUnseenCards ?? 0}
 
-    var numOfMatchedSets: Int { (setGameModel?.numOfMatchedSets ?? 0) / 3 }
+    var numOfMatchedSets: Int { (setGameModel?.numOfMatchedSets ?? 0) }
 
     var totalNumOfSets: Int { setGameModel?.totalNumOfSets ?? 0}
 
