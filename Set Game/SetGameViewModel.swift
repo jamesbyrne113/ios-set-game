@@ -13,10 +13,6 @@ typealias SetGame = SetGameModel<SetGameViewModel.Number, SetGameViewModel.Shape
 class SetGameViewModel: ObservableObject {
     @Published private var setGameModel: SetGame?
 
-//    static func createSetGame() -> SetGame {
-//        return SetGame()
-//    }
-
     var cards: [SetGame.Card] { setGameModel?.cards ?? [SetGame.Card]() }
 
     var displayedCards: [SetGame.Card] { setGameModel?.displayedCards ?? [SetGame.Card]()}
