@@ -34,10 +34,11 @@ struct SetGameView: View {
             
             Grid(self.setGameViewModel.displayedCards) { card in
                 CardView(card: card).onTapGesture {
-                    withAnimation(.linear(duration: 0.2)) {
+                    withAnimation {
                         self.setGameViewModel.select(card: card)
                     }
                 }
+                .transition(AnyTransition.offset(self.generateOffsetPoint(for: size)))
             }
                 
             .onAppear(perform: {
