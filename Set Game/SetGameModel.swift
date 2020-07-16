@@ -67,6 +67,20 @@ struct SetGameModel<Number: Hashable & CaseIterable, Shape: Hashable & CaseItera
 
         return true
     }
+    
+    private mutating func matchMade(with cardIndices: IndexSet) {
+        for cardIndex in cardIndices {
+            cards[cardIndex].isSelected = false
+            cards[cardIndex].isMatched = true
+        }
+    }
+    
+    private mutating func matchNotMade(with cardIndices: IndexSet) {
+        for cardIndex in cardIndices {
+            cards[cardIndex].isSelected = false
+            cards[cardIndex].isMatched = nil
+        }
+    }
 
     mutating func select(card: Card) {
         let previousSelectedIndices = IndexSet(cards.indices.filter({ cardIndex in cards[cardIndex].isSelected }))
@@ -79,17 +93,10 @@ struct SetGameModel<Number: Hashable & CaseIterable, Shape: Hashable & CaseItera
         if allSelectedIndices.count == 3 {
             if previousSelectedIndices.count == 3 {
                 if isMatchingSet(cardSet: previousSelectedIndices.map { cards[$0] }) {
-                    for cardIndex in previousSelectedIndices {
-                        cards[cardIndex].isSelected = false
-                        cards[cardIndex].isMatched = true
-                    }
+                    matchMade(with: previousSelectedIndices)
                 } else {
-                    previousSelectedIndices.forEach({ cardIndex in
-                        cards[cardIndex].isMatched = nil
-                        if cardIndex != currentSelectedIndex {
-                            cards[cardIndex].isSelected = false
-                        }
-                    })
+                    matchNotMade(with: previousSelectedIndices)
+                    cards[currentSelectedIndex].isSelected = true
                 }
             } else if isMatchingSet(cardSet: allSelectedIndices.map { cards[$0] }) {
                 allSelectedIndices.forEach({ cardIndex in cards[cardIndex].isMatched = true })
@@ -104,15 +111,9 @@ struct SetGameModel<Number: Hashable & CaseIterable, Shape: Hashable & CaseItera
             }
         } else if previousSelectedIndices.count == 3 {
             if isMatchingSet(cardSet: previousSelectedIndices.map { cards[$0] }) {
-                for cardIndex in previousSelectedIndices {
-                    cards[cardIndex].isSelected = false
-                    cards[cardIndex].isMatched = true
-                }
+                matchMade(with: previousSelectedIndices)
             } else {
-                for cardIndex in previousSelectedIndices {
-                    cards[cardIndex].isSelected = false
-                    cards[cardIndex].isMatched = nil
-                }
+                matchNotMade(with: previousSelectedIndices)
             }
             cards[currentSelectedIndex].isSelected = !cards[currentSelectedIndex].isSelected
         } else {
