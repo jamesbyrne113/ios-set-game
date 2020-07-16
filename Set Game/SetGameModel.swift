@@ -78,12 +78,19 @@ struct SetGameModel<Number: Hashable & CaseIterable, Shape: Hashable & CaseItera
 
         if allSelectedIndices.count == 3 {
             if previousSelectedIndices.count == 3 {
-                previousSelectedIndices.forEach({ cardIndex in
-                    cards[cardIndex].isMatched = nil
-                    if cardIndex != currentSelectedIndex {
+                if isMatchingSet(cardSet: previousSelectedIndices.map { cards[$0] }) {
+                    for cardIndex in previousSelectedIndices {
                         cards[cardIndex].isSelected = false
+                        cards[cardIndex].isMatched = true
                     }
-                })
+                } else {
+                    previousSelectedIndices.forEach({ cardIndex in
+                        cards[cardIndex].isMatched = nil
+                        if cardIndex != currentSelectedIndex {
+                            cards[cardIndex].isSelected = false
+                        }
+                    })
+                }
             } else if isMatchingSet(cardSet: allSelectedIndices.map { cards[$0] }) {
                 allSelectedIndices.forEach({ cardIndex in cards[cardIndex].isMatched = true })
                 cards[currentSelectedIndex].isSelected = true
